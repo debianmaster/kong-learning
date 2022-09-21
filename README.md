@@ -107,11 +107,11 @@ echo "
 apiVersion: configuration.konghq.com/v1
 kind: KongConsumer
 metadata:
-  name: user1
+  name: u1
   annotations:
     kubernetes.io/ingress.class: kong    
     konghq.com/plugins: rl-4-per-hour
-username: user1
+username: u1
 credentials:
 - user1-apikey
 " | kubectl apply -f -
