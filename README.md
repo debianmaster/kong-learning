@@ -115,7 +115,12 @@ username: u1
 credentials:
 - user1-apikey
 " | kubectl apply -f -
+```
 
+
+
+## extras
+```
 
 echo "
 apiVersion: configuration.konghq.com/v1
