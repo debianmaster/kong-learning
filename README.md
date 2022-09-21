@@ -49,3 +49,23 @@ curl -s -X DELETE http://localhost:8001/consumers/u1/plugins/3e725462-9f01-4ebb-
 ```
 
 ## Activity 3
+```
+kubectl create -f https://bit.ly/k4k8s
+kubectl apply -f https://bit.ly/echo-service
+
+echo "
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: rl-by-ip
+config:
+  minute: 5
+  limit_by: ip
+  policy: local
+plugin: rate-limiting
+" | kubectl apply -f -
+
+
+kubectl patch svc echo \
+  -p '{"metadata":{"annotations":{"konghq.com/plugins": "rl-by-ip"}}}'
+```
