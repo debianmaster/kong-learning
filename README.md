@@ -113,7 +113,7 @@ metadata:
     konghq.com/plugins: rl-4-per-hour
 username: u1
 credentials:
-- user1-apikey
+- u1-api-key
 " | kubectl apply -f -
 ```
 
