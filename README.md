@@ -91,6 +91,18 @@ spec:
 
 kubectl create secret generic u1-api-key --from-literal=kongCredType=key-auth --from-literal=key=u1secret
 
+
+echo "
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: rl-4-per-hour
+config:
+  hour: 4
+  policy: local
+plugin: rate-limiting
+" | kubectl apply -f -
+
 echo "
 apiVersion: configuration.konghq.com/v1
 kind: KongConsumer
@@ -98,6 +110,7 @@ metadata:
   name: user1
   annotations:
     kubernetes.io/ingress.class: kong    
+    konghq.com/plugins: rl-4-per-hour
 username: user1
 credentials:
 - user1-apikey
