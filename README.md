@@ -57,6 +57,57 @@ echo "
 apiVersion: configuration.konghq.com/v1
 kind: KongPlugin
 metadata:
+  name: key-auth
+plugin: key-auth
+config:
+  key_names:
+  - api-key
+" | kubectl apply -f -
+
+
+echo '
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo
+  annotations:
+     konghq.com/plugins: add-response-header
+     konghq.com/strip-path: "true"
+     kubernetes.io/ingress.class: kong
+spec:
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - path: /echo
+        pathType: Prefix
+        backend:
+          service:
+            name:  echo
+            port:
+              number: 80
+
+' | kubectl apply -f -
+
+kubectl create secret generic u1-api-key --from-literal=kongCredType=key-auth --from-literal=key=u1secret
+
+echo "
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: user1
+  annotations:
+    kubernetes.io/ingress.class: kong    
+username: user1
+credentials:
+- user1-apikey
+" | kubectl apply -f -
+
+
+echo "
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
   name: rl-by-ip
 config:
   minute: 5
